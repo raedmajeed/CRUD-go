@@ -10,6 +10,7 @@ var Router *gin.Engine
 
 func main() {
 
-	di.Init()
+	server := di.Init()
+	server.StartServer()
 
 }

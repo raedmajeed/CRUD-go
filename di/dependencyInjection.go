@@ -1,27 +1,31 @@
 package di
 
 import (
-	"fmt"
 	"raedmajeed/controllers"
 	"raedmajeed/db"
+	"raedmajeed/handlers"
 	"raedmajeed/repository"
 	"raedmajeed/service"
+	"raedmajeed/util"
 )
 
-func Init() {
+func Init() *controllers.ServerStruct{
 	db := db.ConnectDatabase()
-	// userRepository := repository.NewUserRepository(db)
+	jwt := util.NewJwtUtil()
 	adminRepository := repository.NewAdminRepository(db)
-	// userService := service.NewAdminServiceImpl(userRepository)
-	adminService := service.NewAdminService(adminRepository)
-	// fmt.Println(adminService)
-	server := controllers.Start()
-	adminHandler := controllers.NewAdminHandler(adminService, server)
-	adminHandler.Handler()
-
-	userHandler := controllers.NewUserHandler(adminService, server)
-	userHandler.UHandler()
-	fmt.Println(adminHandler)
+	userRepository := repository.NewUserRepository(db)
 	
-	server.StartServer()
+	adminService := service.NewAdminService(adminRepository, jwt) // pass jwt package here
+	userService := service.NewUserService(userRepository, jwt) // pass jwt package here
+	
+	server := controllers.NewHTTPServer()
+	
+	adminHandlers := handlers.NewAdminHandler(adminService)
+	userHandlers := handlers.NewUserHandler(userService)
+	
+	userRoutes := controllers.NewUserRoute(userHandlers, server, jwt)
+	adminRoutes := controllers.NewAdminRoute(adminHandlers, server, jwt) // also pass jwt auth here
+	adminRoutes.Routes()
+	userRoutes.URoutes()
+	return server
 }
