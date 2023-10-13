@@ -18,10 +18,10 @@ type AdminServiceImpl struct {
 func (r *AdminServiceImpl) AddUser(user *entity.User) (error, *entity.User) {
 	err, user := r.repo.CreateUser(user)
 	if err != nil {
-		log.Panicln("User not added, adminService file")
+		log.Println("User not added, adminService file")
 		return err, user
 	}
-	return err, user
+	return nil, user
 }
 
 func (r *AdminServiceImpl) BlockUser(id int) (error, *entity.User) {

@@ -22,10 +22,9 @@ func (ah *AdminHandler) AddUser(c *gin.Context) {
 	err, user := ah.admin.AddUser(user)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-			"message" : err,
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H {
+			"message" : err.Error(),
 		})
-		c.Abort()
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H {
@@ -38,7 +37,7 @@ func (ah *AdminHandler) UpdateUser(c *gin.Context) {
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
 		return
 	}
@@ -46,16 +45,16 @@ func (ah *AdminHandler) UpdateUser(c *gin.Context) {
 	err = c.BindJSON(user)
 	
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-				"message": err,
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H {
+				"error": err.Error(),
 		})
 		return
 	}
 
 	err , user = ah.admin.UpdateUser(idInt, *user)
 	if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-					"message": "Unable to update user",
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"ERROR": err.Error(),
 			})
 			return
 	}
@@ -69,7 +68,7 @@ func (ah *AdminHandler) SearchUser(c *gin.Context) {
 	str := c.Query("str")
 	if str == "" {
 		log.Println("Search string is empty")
-		c.JSON(http.StatusBadRequest, gin.H {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H {
 			"message": "Search string is empty",
 		})
 		return
@@ -78,8 +77,8 @@ func (ah *AdminHandler) SearchUser(c *gin.Context) {
 	err, users := ah.admin.SearchUser(str)
 	if err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H {
-			"error": err,
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H {
+			"error": err.Error(),
 		})
 		return
 	}
@@ -95,7 +94,7 @@ func (ah *AdminHandler) FindUser(c *gin.Context) {
 	id := c.Param("id")
 	userID, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid user ID",
 		})
 		return
@@ -103,8 +102,8 @@ func (ah *AdminHandler) FindUser(c *gin.Context) {
 
 	err, user := ah.admin.FindUser(userID)
 	if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-					"message": "Unable to Find user",
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"error": err.Error(),
 			})
 			return
 	}
@@ -116,8 +115,8 @@ func (ah *AdminHandler) FindUser(c *gin.Context) {
 func (ah *AdminHandler) FindAllUsers(c *gin.Context) {
 	err, users := ah.admin.FindAllUsers()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-			"message" : "Unable To Find All Users",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H {
+			"error" : err.Error(),
 		})
 		return
 	}
@@ -131,24 +130,24 @@ func (ah *AdminHandler) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid user ID",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
 	
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-				"message": "Invalid user data",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
 
 	err , user := ah.admin.DeleteUser(idInt)
 	if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-					"message": "Unable to update user",
-			})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 			return
 	}
 	
@@ -161,24 +160,24 @@ func (ah *AdminHandler) BlockUser(c *gin.Context) {
 	id := c.Param("id")
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid user ID",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
 	
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-				"message": "Invalid user data",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
 
 	err , user := ah.admin.BlockUser(idInt)
 	if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-					"message": "Unable to update user",
-			})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 			return
 	}
 	
@@ -191,24 +190,24 @@ func (ah *AdminHandler) UnBlockUser(c *gin.Context) {
 	id := c.Param("id")
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid user ID",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
 	
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-				"message": "Invalid user data",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}
 
 	err , user := ah.admin.UnBlockUser(idInt)
 	if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-					"message": "Unable to update user",
-			})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 			return
 	}
 	
@@ -225,8 +224,8 @@ func (ah *AdminHandler) Login(c *gin.Context) {
 	err, token := ah.admin.Login(LoginRequest)
 	
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H {
-				"message": "Invalid Login Details",
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
 		return
 	}

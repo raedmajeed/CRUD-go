@@ -20,6 +20,12 @@ func (db *AdminRepositoryImpl) CreateUser(user *entity.User) (error, *entity.Use
 			return errors.New("Error Coonecting Database"), nil
 	}
 
+	err, user := db.FindUserByEmail(user.Email)
+	if err != nil {
+		log.Println("USER ALREADY EXISTS")
+		return errors.New("User exists in db"), nil
+	}
+
 	result := db.DB.Create(&user)
 	if result.Error != nil {
 			log.Println("Unable to add user, AdminRepositoryImpl package")

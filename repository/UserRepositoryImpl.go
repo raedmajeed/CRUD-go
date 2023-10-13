@@ -22,7 +22,7 @@ func (db *UserRepositoryImpl) RegisterUser(user *entity.User) (error, *entity.Us
 	result := db.DB.Create(&user)
 	if result.Error != nil {
 			log.Println("Unable to add user, AdminRepositoryImpl package")
-			return errors.New("User not added to db"), user
+			return errors.New("User already exists"), user
 	}
 
 	return nil, user

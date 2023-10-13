@@ -15,8 +15,8 @@ func Init() *controllers.ServerStruct{
 	adminRepository := repository.NewAdminRepository(db)
 	userRepository := repository.NewUserRepository(db)
 	
-	adminService := service.NewAdminService(adminRepository, jwt) // pass jwt package here
-	userService := service.NewUserService(userRepository, jwt) // pass jwt package here
+	adminService := service.NewAdminService(adminRepository, jwt)
+	userService := service.NewUserService(userRepository, jwt)
 	
 	server := controllers.NewHTTPServer()
 	
@@ -24,7 +24,7 @@ func Init() *controllers.ServerStruct{
 	userHandlers := handlers.NewUserHandler(userService)
 	
 	userRoutes := controllers.NewUserRoute(userHandlers, server, jwt)
-	adminRoutes := controllers.NewAdminRoute(adminHandlers, server, jwt) // also pass jwt auth here
+	adminRoutes := controllers.NewAdminRoute(adminHandlers, server, jwt)
 	adminRoutes.Routes()
 	userRoutes.URoutes()
 	return server
